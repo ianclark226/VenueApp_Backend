@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface IVenueService {
     Venue addNewVenue(MultipartFile photo, String venueType, BigDecimal venuePrice) throws SQLException, IOException;
@@ -16,4 +17,10 @@ public interface IVenueService {
     List<Venue> getAllVenues();
 
     byte[] getVenuePhotoByVenueId(Long venueId) throws SQLException;
+
+    void deleteVenue(Long venueId);
+
+    Venue updateVenue(Long venueId, String venueType, BigDecimal venuePrice, byte[] photoBytes);
+
+    Optional<Venue> getVenueById(Long venueId);
 }

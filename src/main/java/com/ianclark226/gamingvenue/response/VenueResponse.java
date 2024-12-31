@@ -28,12 +28,12 @@ public class VenueResponse {
         this.venuePrice = venuePrice;
     }
 
-    public VenueResponse(Long id, String venueType, BigDecimal venuePrice, Boolean isBooked, byte[] photoBytes, List<BookingResponse> bookings) {
+    public VenueResponse(Long id, String venueType, BigDecimal venuePrice, Boolean isBooked, byte[] photoBytes) {
         this.id = id;
         this.venueType = venueType;
         this.venuePrice = venuePrice;
         this.isBooked = isBooked;
         this.photo = photoBytes != null ? Base64.encodeBase64String(photoBytes) : null;
-        this.bookings = bookings;
+//        this.bookings = bookings;
     }
 }

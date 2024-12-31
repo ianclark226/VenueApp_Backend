@@ -1,5 +1,6 @@
 package com.ianclark226.gamingvenue.service;
 
+import com.ianclark226.gamingvenue.exception.InternalServerException;
 import com.ianclark226.gamingvenue.exception.ResourceNotFoundException;
 import com.ianclark226.gamingvenue.model.Venue;
 import com.ianclark226.gamingvenue.repo.VenueRepo;
@@ -55,5 +56,34 @@ public class VenueService implements IVenueService {
             return photoBlob.getBytes(1, (int) photoBlob.length());
         }
         return null;
+    }
+
+    @Override
+    public void deleteVenue(Long venueId) {
+        Optional<Venue> theVenue = venueRepo.findById(venueId);
+        if(theVenue.isPresent()) {
+            venueRepo.deleteById(venueId);
+        }
+    }
+
+    @Override
+    public Venue updateVenue(Long venueId, String venueType, BigDecimal venuePrice, byte[] photoBytes) {
+        Venue venue = venueRepo.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
+        if(venueType != null) venue.setVenueType(venueType);
+        if(venuePrice != null) venue.setVenuePrice(venuePrice);
+        if(photoBytes != null && photoBytes.length > 0) {
+            try {
+                venue.setPhoto(new SerialBlob(photoBytes));
+
+            } catch(SQLException e) {
+                throw new InternalServerException("Error updating venue");
+            }
+        }
+        return venueRepo.save(venue);
+    }
+
+    @Override
+    public Optional<Venue> getVenueById(Long venueId) {
+        return Optional.of(venueRepo.findById(venueId).get());
     }
 }
