@@ -1,4 +1,4 @@
 package com.ianclark226.gamingvenue.controller;
 
-public class BookedVenue {
+public class BookedVenueController {
 }

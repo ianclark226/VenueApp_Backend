@@ -1,4 +1,19 @@
 package com.ianclark226.gamingvenue.service;
 
-public interface VenueService {
+import com.ianclark226.gamingvenue.model.Venue;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.List;
+
+public interface IVenueService {
+    Venue addNewVenue(MultipartFile photo, String venueType, BigDecimal venuePrice) throws SQLException, IOException;
+
+    List<String> getAllVenueTypes();
+
+    List<Venue> getAllVenues();
+
+    byte[] getVenuePhotoByVenueId(Long venueId) throws SQLException;
 }
