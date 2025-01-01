@@ -1,10 +1,6 @@
 package com.ianclark226.gamingvenue.response;
 
 import com.ianclark226.gamingvenue.model.Venue;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +32,7 @@ public class BookingResponse {
 
     private Venue venue;
 
-    public BookingResponse(Long bookingId, Date start_Date, Date end_Date, String bookingConfirmationCode) {
+    public BookingResponse(Long bookingId, Date start_Date, Date end_Date, String bookingConfirmationCode, String organizerEmail, int numOfOrganizers, int numOfEvents, int totalNumOfOrganizers, String confirmationCode, VenueResponse venue) {
         this.bookingId = bookingId;
         this.start_Date = start_Date;
         this.end_Date = end_Date;
