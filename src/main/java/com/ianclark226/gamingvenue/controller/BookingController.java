@@ -9,7 +9,6 @@ import com.ianclark226.gamingvenue.response.BookingResponse;
 import com.ianclark226.gamingvenue.response.VenueResponse;
 import com.ianclark226.gamingvenue.service.IBookingService;
 import com.ianclark226.gamingvenue.service.IVenueService;
-import com.ianclark226.gamingvenue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,24 +18,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("http://localhost:5173")
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
     private final IBookingService bookingService;
     private final IVenueService venueService;
 
-    @GetMapping("all-bookings")
-
+    @GetMapping("/all-bookings")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
         List<BookedVenue> bookings = bookingService.getAllBookings();
-        List<BookingResponse> bookingResponses = new ArrayList<>();
-        for(BookedVenue booking : bookings) {
+        System.out.println("===bookings===");
+        System.out.println(bookings);
+
+        List<BookingResponse> BookingResponses = new ArrayList<>();
+        for (BookedVenue booking : bookings) {
             BookingResponse bookingResponse = getBookingResponse(booking);
-            bookingResponses.add(bookingResponse);
+            BookingResponses.add(bookingResponse);
         }
 
-        return ResponseEntity.ok(bookingResponses);
+        return ResponseEntity.ok(BookingResponses);
+    }
+
+    @PostMapping("/venue/{venueId}/booking")
+    public ResponseEntity<?> saveBooking(@PathVariable Long venueId,
+                                         @RequestBody BookedVenue bookingRequest) {
+        try {
+            String confirmationCode = bookingService.saveBooking(venueId, bookingRequest);
+            return ResponseEntity.ok("Venue booked successfully, Your booking confirmation code is :" + confirmationCode);
+        } catch (InvalidBookingRequestException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/confirmation/{confirmationCode}")
@@ -44,26 +56,10 @@ public class BookingController {
         try {
             BookedVenue booking = bookingService.findByBookingConfirmationCode(confirmationCode);
             BookingResponse bookingResponse = getBookingResponse(booking);
-
             return ResponseEntity.ok(bookingResponse);
-
-        } catch(ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
-    }
-
-    @PostMapping("/venue/{venueId}/booking")
-    public ResponseEntity<?> saveBooking(@PathVariable Long venueId,
-                                         @RequestBody BookedVenue bookingRequest) {
-
-        try {
-            String confirmationCode = bookingService.saveBooking(venueId, bookingRequest);
-            return ResponseEntity.ok("Venue Booked Successfully, Your booking confirmation code is:" + confirmationCode);
-
-        } catch(InvalidBookingRequestException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
     }
 
     @DeleteMapping("/booking/{bookingId}/delete")
@@ -72,21 +68,25 @@ public class BookingController {
     }
 
     private BookingResponse getBookingResponse(BookedVenue booking) {
-        Venue theVenue = venueService.getVenueById(booking.getVenue().getId()).get();
-        VenueResponse venue = new VenueResponse(
-                theVenue.getId(),
-                theVenue.getVenueType(),
-                theVenue.getVenuePrice());
+        Venue venue = venueService.getVenueById(booking.getVenue().getId()).get();
+        VenueResponse venueResponse = new VenueResponse(
+                venue.getId(),
+                venue.getVenueType(),
+                venue.getVenuePrice()
+        );
 
-        return new BookingResponse(booking.getBookingId(),
+        return new BookingResponse(
+                booking.getBookingId(),
                 booking.getStart_Date(),
                 booking.getEnd_Date(),
                 booking.getOrganizerFullName(),
                 booking.getOrganizerEmail(),
-                booking.getNumOfOrganizers(),
-                booking.getNumOfEvents(),
+                booking.getNumberOfOrganizers(),
+                booking.getNumberOfEvents(),
                 booking.getTotalNumOfOrganizers(),
                 booking.getBookingConfirmationCode(),
-                venue);
+                venueResponse
+        );
     }
+
 }

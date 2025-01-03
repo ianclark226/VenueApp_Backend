@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -14,54 +15,50 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookedVenue {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long bookingId;
 
     @Column(name = "start_Date")
-    private Date start_Date;
+    private LocalDate start_Date;
 
-    @Column(name = "end_Date")
-    private Date end_Date;
+    @Column(name="end_Date")
+    private LocalDate end_Date;
 
-    @Column(name = "organizer_FullName")
+    @Column(name="organizer_full_name")
     private String organizerFullName;
 
-    @Column(name = "organizer_Email")
+    @Column(name="organizer_email")
     private String organizerEmail;
 
-    @Column(name = "organizers")
-    private int numOfOrganizers;
+    @Column(name="organizers")
+    private int numberOfOrganizers;
 
-    @Column(name = "events")
-    private int numOfEvents;
+    @Column(name="events")
+    private int numberOfEvents;
 
-    @Column(name = "total_organizers")
+    @Column(name="total_organizers")
     private int totalNumOfOrganizers;
 
-    @Column(name = "confirmation_code")
+    @Column(name="confirmation_Code")
     private String bookingConfirmationCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "venue_id")
     private Venue venue;
 
-
-
-    public void calculateTotal() {
-        this.totalNumOfOrganizers = this.numOfOrganizers * this.numOfEvents;
+    public void calculateTotalNumberOfGuest(){
+        this.totalNumOfOrganizers = this.numberOfOrganizers + numberOfEvents;
     }
 
-    public void setNumOfEvents(int numOfEvents) {
-        this.numOfEvents = numOfEvents;
-        calculateTotal();
+    public void setNumofOrganizer(int numOfAdults) {
+        this.numberOfOrganizers = numOfAdults;
+        calculateTotalNumberOfGuest();
     }
 
-    public void setNumOfAdults(int numOfAdults) {
-        this.numOfOrganizers = numOfAdults;
-        calculateTotal();
+    public void setNumOfChildren(int numOfChildren) {
+        this.numberOfEvents = numOfChildren;
+        calculateTotalNumberOfGuest();
     }
 
     public void setBookingConfirmationCode(String bookingConfirmationCode) {

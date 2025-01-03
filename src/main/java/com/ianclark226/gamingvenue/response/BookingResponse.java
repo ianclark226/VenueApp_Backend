@@ -5,18 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingResponse {
+    private Long id;
 
-    private Long bookingId;
+    private LocalDate startDate;
 
-    private Date start_Date;
-
-    private Date end_Date;
+    private LocalDate endDate;
 
     private String organizerFullName;
 
@@ -30,12 +30,13 @@ public class BookingResponse {
 
     private String bookingConfirmationCode;
 
-    private Venue venue;
+    private VenueResponse room;
 
-    public BookingResponse(Long bookingId, Date start_Date, Date end_Date, String bookingConfirmationCode, String organizerEmail, int numOfOrganizers, int numOfEvents, int totalNumOfOrganizers, String confirmationCode, VenueResponse venue) {
-        this.bookingId = bookingId;
-        this.start_Date = start_Date;
-        this.end_Date = end_Date;
+    public BookingResponse(Long id, LocalDate startDate,
+                           LocalDate endDate, String bookingConfirmationCode) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.bookingConfirmationCode = bookingConfirmationCode;
     }
 }

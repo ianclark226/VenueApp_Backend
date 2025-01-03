@@ -106,13 +106,13 @@ public class VenueController {
 
     private VenueResponse getVenueResponse(Venue venue) {
         List<BookedVenue> bookings = getAllBookingsByVenueId(venue.getId());
-//        List<BookingResponse> bookingInfo = bookings
-//                .stream()
-//                .map(booking -> new BookingResponse(
-//                        booking.getBookingId(),
-//                        booking.getStart_Date(),
-//                        booking.getEnd_Date(),
-//                        booking.getBookingConfirmationCode())).toList();
+        List<BookingResponse> bookingInfo = bookings
+                .stream()
+                .map(booking -> new BookingResponse(
+                        booking.getBookingId(),
+                        booking.getStart_Date(),
+                        booking.getEnd_Date(),
+                        booking.getBookingConfirmationCode())).toList();
         byte[] photoBytes = null;
         Blob photoBlob = venue.getPhoto();
         if(photoBlob != null) {
@@ -126,7 +126,7 @@ public class VenueController {
         return new VenueResponse(venue.getId(),
                 venue.getVenueType(),
                 venue.getVenuePrice(),
-                venue.isBooked(), photoBytes);
+                venue.isBooked(), photoBytes, bookingInfo);
     }
 
     private List<BookedVenue> getAllBookingsByVenueId(Long venueId) {

@@ -27,23 +27,27 @@ public class Venue {
 
     @Lob
     private Blob photo;
-
-    @OneToMany(mappedBy="venue", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venue",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private List<BookedVenue> bookings;
 
     public Venue() {
         this.bookings = new ArrayList<>();
     }
 
-    public void addBooking(BookedVenue booking) {
-
-        if(bookings == null) {
+    public void addBooking(BookedVenue booking){
+        if (bookings == null){
             bookings = new ArrayList<>();
         }
         bookings.add(booking);
+
         booking.setVenue(this);
+
         isBooked = true;
+
         String bookingCode = RandomStringUtils.randomNumeric(10);
         booking.setBookingConfirmationCode(bookingCode);
+
     }
 }
